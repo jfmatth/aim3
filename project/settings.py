@@ -16,10 +16,16 @@ SECRET_KEY = os.getenv(
     '9e4@&tw46$l31)zrqe3wi+-slqm(ruvz&se0^%9#6(_w3ui!c0'
 )
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#setup DEBUG based on the DJANGO_SECRET_KEY in the environment
+ON_PAAS = 'DJANGO_SECRET_KEY' in os.environ
+WWWNAME = ['www.stocksonthebeach.com','stocksonthebeach.com']
+DEBUG = not ON_PAAS
+DEBUG = DEBUG or 'DEBUG' in os.environ
 
-ALLOWED_HOSTS = ['*']
+if ON_PAAS:
+    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()] + WWWNAME
+else:
+    ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -31,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'aim',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -64,7 +71,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
