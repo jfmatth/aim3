@@ -1,0 +1,86 @@
+{% load staticfiles %}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!-- base.html -->
+<html>
+    <head>{% block head %}
+	<!-- bootstrap.html -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap -->
+    <link href="{% static "css/bootstrap.css" %}" rel="stylesheet" media="screen">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="{% static "js/jquery-2.0.3.js" %}"> </script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="{% static "js/bootstrap.js" %}"> </script>
+	{% endblock %}
+	
+{% comment %}
+Added Google Analytics
+{% endcomment %}
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-54198603-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+        
+    <title>{% block title %}{% endblock %}</title>
+    </head>
+
+    <body>
+
+<div class="container" style="margin-top:20px">
+
+{% comment %} NAVBAR FOR BOOTSTRAP {% endcomment %}
+
+	<nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+
+{% if user.is_authenticated %}
+				<a class="navbar-brand" href="{% url 'aim_main' %}">My Investments</a></li>
+{% else %}
+		     	<a class="navbar-brand" href="/">www.StocksontheBeach.com</a>
+{% endif %}
+
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+	
+			<ul class="nav navbar-nav navbar-right">
+
+{% if user.is_authenticated %}
+				<li><a href="{% url 'account_logout' %}">Logout</a></li>
+{% else %}
+				<li><a href="{% url 'account_login' %}?next={% url 'aim_main' %}">Login</a></li>
+
+{% endif %}
+
+			</ul>
+		</div>
+	</nav>
+
+        {% block bodystart %}{% endblock %}
+        {% block content %}{% endblock %}
+        {% block body %}{% endblock %}
+        {% block bodyend %}
+        	</div>
+        {% endblock %}
+    </body>
+</html>
+

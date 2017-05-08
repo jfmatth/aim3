@@ -28,16 +28,34 @@ else:
     ALLOWED_HOSTS = ['*']
 
 
+#django-allauth
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+   'allauth.account.auth_backends.AuthenticationBackend',
+)
+
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
+    # django-allauth    
     'django.contrib.auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+
+
+    'django.contrib.humanize',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'aim',
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -54,10 +72,20 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'project.urls'
 
+# TEMPLATE_DIRS = (
+#     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+#     # Always use forward slashes, even on Windows.
+#     # Don't forget to use absolute paths, not relative paths.
+#     os.path.join(BASE_DIR, 'templates'),
+# )
+
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [     os.path.join(BASE_DIR, 'templates'),
+                ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -96,10 +124,14 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+#django-allauth
+SITE_ID = 1
