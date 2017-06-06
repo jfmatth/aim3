@@ -27,7 +27,6 @@ if ON_PAAS:
 else:
     ALLOWED_HOSTS = ['*']
 
-
 #django-allauth
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -47,15 +46,14 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
 
-
     'django.contrib.humanize',
     'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'aim',
 
+    'aim',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -72,19 +70,10 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'project.urls'
 
-# TEMPLATE_DIRS = (
-#     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-#     # Always use forward slashes, even on Windows.
-#     # Don't forget to use absolute paths, not relative paths.
-#     os.path.join(BASE_DIR, 'templates'),
-# )
-
-
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [     os.path.join(BASE_DIR, 'templates'),
+        'DIRS': [ os.path.join(BASE_DIR, 'templates'),
                 ],
         'APP_DIRS': True,
         'OPTIONS': {

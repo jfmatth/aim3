@@ -49,7 +49,6 @@ class PortfolioForm(forms.ModelForm):
 
 
 
-
 class HoldingForm(forms.ModelForm):
     # define symbol here to override the default ModelChoicefield dropdown list.
     symbol = forms.CharField()

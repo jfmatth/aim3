@@ -60,7 +60,7 @@ class PortfolioCreate(CreateView):
     
     success_url = "/aim/"
 
-    def get_form(self, form_class):
+    def get_form(self, form_class=None):
         # Since we don't show the owner field, take it from the user
         # requesting to add this portfolio.
         form = super(PortfolioCreate,self).get_form(form_class)
@@ -88,7 +88,7 @@ class HoldingCreateView(CreateView):
 
     portfolio = None
 
-    def get_form(self, form_class):
+    def get_form(self, form_class=None):
         form = super(HoldingCreateView, self).get_form(form_class)
         
         try:
@@ -184,7 +184,7 @@ class TransactionCreate(CreateView):
 #     def get_queryset(self):
 #         return Transaction.objects.filter(holding__portfolio__owner = self.request.user)
 
-    def get_form(self, form_class):
+    def get_form(self, form_class=None):
         form = super(TransactionCreate, self).get_form(form_class)
         holding = Holding.objects.get(pk=self.kwargs['holding_id'])
 

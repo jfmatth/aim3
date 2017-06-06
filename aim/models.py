@@ -26,7 +26,7 @@ class Symbol(models.Model):
                                         on_delete=models.DO_NOTHING,
                                         )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
     
 #===============================================================================
@@ -41,7 +41,7 @@ class Price(models.Model):
     close  = models.DecimalField(max_digits=12, decimal_places=3, blank=False)
     volume = models.IntegerField(blank=False)
     
-    def __unicode__(self):
+    def __str__(self):
         return "%s %s %s" % (self.symbol.name, self.date, self.close)
 
 
@@ -73,7 +73,7 @@ class Portfolio(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True)
     permission = models.CharField(max_length=10, choices=portfolio_perms, default="X")              
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name
     
     class Meta:
@@ -100,7 +100,7 @@ class Holding(models.Model):
         else:
             super(Holding, self).save(force_insert, force_update)
 
-    def __unicode__(self):
+    def __str__(self):
         return "[%s in %s]" % (self.symbol.name, self.portfolio)
 
     def shares(self):
@@ -171,7 +171,7 @@ class HoldingAlert(models.Model):
     buyprice  = models.DecimalField(max_digits=10, decimal_places=3)
     sellprice = models.DecimalField(max_digits=10, decimal_places=3)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s b:%s s:%s" % (self.holding, self.buyprice,self.sellprice)
 
     def jsdate(self):
@@ -208,7 +208,7 @@ class AimBase(models.Model):
     buyperc    = models.IntegerField(default=10)          # how much percent of value to buy
     sellperc   = models.IntegerField(default=10)          # how much percent of value to sell 
     
-    def __unicode__(self):
+    def __str__(self):
         return "Base class for Aim"
     
     def BuyPrice(self):
@@ -317,7 +317,7 @@ class AimController(AimBase):
         super(AimController, self).save(force_insert, force_update)
         
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s (%s)" % (self.holding, self.control)
 
 #===============================================================================
@@ -331,7 +331,7 @@ class Transaction(models.Model):
     price          = models.DecimalField(max_digits=8, decimal_places=3)
     type           = models.CharField(max_length=10, choices=transaction_types, default="Buy") 
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s [%s] (%s - .t%s @ %s)" % (self.holding, self.date, self.type, self.shares, self.price)
 
     def __type_multiplier(self):
