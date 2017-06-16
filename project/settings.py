@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     # django-allauth    
     'aim',
     'loader', 
+    'alerter',
 
     'django.contrib.auth',
     'django.contrib.sites',
@@ -129,3 +130,14 @@ SITE_ID = 1
 # FTP information
 FTPLOGIN = os.getenv("FTPLOGIN", None)
 FTPPASS  = os.getenv("FTPPASS", None)
+
+# EMAIL settings
+ADMINS = ( ('John', 'john@compunique.com'),)
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("EMAIL_USER", None)
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD", None) 
+
+
