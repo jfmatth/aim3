@@ -22,10 +22,10 @@ WWWNAME = ['www.stocksonthebeach.com','stocksonthebeach.com']
 DEBUG = not ON_PAAS
 DEBUG = DEBUG or 'DEBUG' in os.environ
 
-if ON_PAAS:
-    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()] + WWWNAME
-else:
-    ALLOWED_HOSTS = ['*']
+#if ON_PAAS:
+#    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()] + WWWNAME
+#else:
+ALLOWED_HOSTS = ['*']
 
 #django-allauth
 AUTHENTICATION_BACKENDS = (
