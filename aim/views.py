@@ -85,6 +85,7 @@ class HoldingCreateView(CreateView):
     form_class = HoldingForm
     success_url = "/aim/"
     template_name = "aim/HoldingView.html"
+    # template_name = "HoldingView.html"
 
     portfolio = None
 

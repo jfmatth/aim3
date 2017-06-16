@@ -16,4 +16,6 @@ urlpatterns = [
 
     url(r'^accounts/', include('allauth.urls')),
 
+    url(r'^graph/', include('graphs.urls')),
+
 ]

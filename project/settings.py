@@ -39,6 +39,9 @@ AUTHENTICATION_BACKENDS = (
 
 INSTALLED_APPS = (
     # django-allauth    
+    'aim',
+    'loader', 
+
     'django.contrib.auth',
     'django.contrib.sites',
     'allauth',
@@ -53,8 +56,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'aim',
-)
+    )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -73,8 +75,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ os.path.join(BASE_DIR, 'templates'),
-                ],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -124,3 +125,7 @@ STATICFILES_DIRS = [
 
 #django-allauth
 SITE_ID = 1
+
+# FTP information
+FTPLOGIN = os.getenv("FTPLOGIN", None)
+FTPPASS  = os.getenv("FTPPASS", None)
