@@ -1,0 +1,17 @@
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  name: loadprices
+spec:
+  schedule: "@hourly"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: loadprices
+            image: aimtest/django-psql-persistent:latest
+            args:
+            - /bin/bash
+            - loadprices.sh
+          restartPolicy: Never
