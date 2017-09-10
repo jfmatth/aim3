@@ -63,3 +63,6 @@ target/
 # environment
 activate.bat
 .vscode/
+
+# my special files
+ftplogin.bat

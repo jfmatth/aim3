@@ -39,10 +39,7 @@ class Command(BaseCommand):
         # LoadAll()
         # self.stdout.write("Loadprices.py - Complete")
 
-        print(options)
-        print(options['start'])
-
-        sd = datetime.datetime.strptime(options['start'][1] , "%Y-%m-%d").date()
+        sd = datetime.datetime.strptime(options['start'][0], "%Y-%m-%d").date()
         ed = datetime.date.today()
 
         print(sd,ed)
