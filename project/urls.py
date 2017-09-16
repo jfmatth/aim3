@@ -3,6 +3,8 @@ from django.contrib import admin
 
 from aim.views import IndexView 
 
+from health.views import health
+
 urlpatterns = [
     # Examples:
     # url(r'^$', 'project.views.home', name='home'),
@@ -17,5 +19,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     url(r'^graph/', include('graphs.urls')),
+
+    url(r'^health$', health)
 
 ]

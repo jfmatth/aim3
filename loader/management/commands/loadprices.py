@@ -272,9 +272,6 @@ def LoadAll(date=None, history=False):
 
     logger.info("LoadAll() complete")
 
-
-
-
 # turn this into a management command.
 class Command(BaseCommand):
     args = "Date optional"
