@@ -38,7 +38,6 @@ AUTHENTICATION_BACKENDS = (
 # Application definition
 
 INSTALLED_APPS = (
-    # django-allauth    
     'aim',
     'loader', 
     'alerter',
@@ -57,7 +56,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'users',
     )
+
+AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -139,5 +141,3 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("EMAIL_USER", None)
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD", None) 
-
-
