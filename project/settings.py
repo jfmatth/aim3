@@ -59,7 +59,7 @@ INSTALLED_APPS = (
     'users',
     )
 
-AUTH_USER_MODEL = 'users.User'
+# AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -73,7 +73,7 @@ MIDDLEWARE_CLASSES = (
     'whitenoise.middleware.WhiteNoiseMiddleware',
 )
 
-#ROOT_URLCONF = 'project.urls'
+ROOT_URLCONF = 'project.urls'
 
 TEMPLATES = [
     {
