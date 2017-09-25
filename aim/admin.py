@@ -14,10 +14,10 @@ def HoldingAdmin_currentprice(obj):
     
 HoldingAdmin_currentprice.short_description = "Current Price"
 def HoldingAdmin_alert(obj):
-    if (obj.symbol.currentprice and obj.currentalert) and obj.symbol.currentprice > obj.currentalert.sellprice:
+    if (obj.symbol.currentprice and obj.currentalert) and obj.symbol.currentprice.close > obj.currentalert.sellprice:
         return "SELL"
      
-    if (obj.symbol.currentprice and obj.currentalert) and obj.symbol.currentprice < obj.currentalert.buyprice:
+    if (obj.symbol.currentprice and obj.currentalert) and obj.symbol.currentprice.close < obj.currentalert.buyprice:
         return "BUY"
      
     return None
