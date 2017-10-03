@@ -65,9 +65,10 @@ Added Google Analytics
 			<ul class="nav navbar-nav navbar-right">
 
 {% if user.is_authenticated %}
-				<li><a href="{% url 'account_logout' %}">Logout</a></li>
+				<li><a href="{% url 'users_logout' %}">Logout</a></li>
 {% else %}
-				<li><a href="{% url 'account_login' %}?next={% url 'aim_main' %}">Login</a></li>
+				<li><a href="{% url 'users_login' %}?next={% url 'aim_main' %}">Login</a></li>
+				<li><a href="{% url 'users_register' %}">Register</a></li>
 
 {% endif %}
 

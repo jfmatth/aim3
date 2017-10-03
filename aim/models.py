@@ -65,7 +65,7 @@ class Price(models.Model):
 # Portfolio 
 #===============================================================================
 portfolio_perms=(
-    ("X", "None - Owner only"),
+    ("X"    , "None - Owner only"),
     ("V", "Public View"),
 )
 class Portfolio(models.Model):

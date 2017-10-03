@@ -90,5 +90,15 @@ Symbol.objects.filter(currentprice__date__month=8).delete()
 ```
 Price.objects.filter(date__year=2009).delete()
 ```
-
-                
+## for starter migration, remove all prices except those that are in current holdings
+### this query takes A WHILE locally on battery :)
+```
+Symbol.objects.filter(holding__isnull=True).count()
+8422
+Symbol.objects.filter(holding__isnull=True).delete()
+```
+## then dumpdata w/o certain apps and load in to starter DB
+```
+python manage.py dumpdata --indent=2 --exclude loader > all.json
+python manage.py loaddata all.json
+```
