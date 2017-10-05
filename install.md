@@ -102,3 +102,6 @@ Symbol.objects.filter(holding__isnull=True).delete()
 python manage.py dumpdata --indent=2 --exclude loader > all.json
 python manage.py loaddata all.json
 ```
+## Setup FTP and SMTP user / passwords
+Add environment variables to the django deployment:
+FTPPASS,FTPLOGIN,EMAIL_USER,EMAIL_PASSWORD
