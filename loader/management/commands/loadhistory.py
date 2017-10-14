@@ -35,5 +35,5 @@ class Command(BaseCommand):
             else:
                 h = False
 
-            print ("Loading {0}".format(date) )
+            print ("Loading {0}".format(x) )
             LoadAll(date=x, history=h)

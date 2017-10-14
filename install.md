@@ -38,6 +38,11 @@ Symbol.objects.filter(currentprice__isnull=True).delete()
 ```
 ## Remove all symbols that don't have current prices, by year
 ```
+Symbol.objects.filter(currentprice__date__year=2009).delete()
+Symbol.objects.filter(currentprice__date__year=2010).delete()
+Symbol.objects.filter(currentprice__date__year=2011).delete()
+Symbol.objects.filter(currentprice__date__year=2012).delete()
+Symbol.objects.filter(currentprice__date__year=2013).delete()
 Symbol.objects.filter(currentprice__date__year=2014).delete()
 Symbol.objects.filter(currentprice__date__year=2015).delete()
 Symbol.objects.filter(currentprice__date__year=2016).delete()
