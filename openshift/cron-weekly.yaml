@@ -1,17 +1,30 @@
-apiVersion: batch/v1
-kind: Job
+apiVersion: batch/v2alpha1
+kind: CronJob
 metadata:
   name: loadprices
 spec:
-  template:
-    metadata:
-      name: loadprices
+  schedule: "0 * * * *"  
+  jobTemplate:
     spec:
-      containers:
-      - name: loadprices
-        image: 172.30.118.67:5000/aimit/django
-        env:
-          - name: APP_SCRIPT
-            value: "loadprices.sh"
-      restartPolicy: Never
-      backoffLimit: 1
+      template:
+        metadata:
+          lables:
+            parent: "loadprices"
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: loadprices
+            image: 172.30.118.67:5000/stocksonthebeach/django
+            env:
+              - name: APP_SCRIPT
+                value: "loadprices.sh"
+              - name: FTPPASS
+                value: "Got1eoddata"
+              - name: FTPLOGIN
+                value: "jfmatth"
+              - name: EMAIL_USER
+                value: "registration@compunique.com"
+              - name: EMAIL_PASSWORD
+                value: "Pa55word"
+              - name: DEBUG
+                value: "True"
