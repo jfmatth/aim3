@@ -1,9 +1,8 @@
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
+import os, socket
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -18,21 +17,21 @@ SECRET_KEY = os.getenv(
 
 #setup DEBUG based on the DJANGO_SECRET_KEY in the environment
 ON_PAAS = 'DJANGO_SECRET_KEY' in os.environ
-WWWNAME = ['www.stocksonthebeach.com','stocksonthebeach.com']
+WWWNAME = ['www.stocksonthebeach.com','stocksonthebeach.com', socket.gethostname()]
 DEBUG = not ON_PAAS
 DEBUG = DEBUG or 'DEBUG' in os.environ
 
 #if ON_PAAS:
 #    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()] + WWWNAME
 #else:
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = WWWNAME
 
 #django-allauth
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
     # `allauth` specific authentication methods, such as login by e-mail
-#    'allauth.account.auth_backends.AuthenticationBackend',
+    # 'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 # Application definition
