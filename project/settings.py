@@ -16,10 +16,13 @@ SECRET_KEY = os.getenv(
 )
 
 #setup DEBUG based on the DJANGO_SECRET_KEY in the environment
+
 ON_PAAS = 'DJANGO_SECRET_KEY' in os.environ
 WWWNAME = ['www.stocksonthebeach.com','stocksonthebeach.com', socket.gethostname()]
+
 DEBUG = not ON_PAAS
 DEBUG = DEBUG or 'DEBUG' in os.environ
+DEBUG = False
 
 #if ON_PAAS:
 #    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()] + WWWNAME
@@ -38,15 +41,11 @@ AUTHENTICATION_BACKENDS = (
 
 INSTALLED_APPS = (
     'aim',
-    'loader', 
+    'loader',
     'alerter',
 
     'django.contrib.auth',
     'django.contrib.sites',
-    # 'allauth',
-    # 'allauth.account',
-    # 'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.github',
 
     'django.contrib.humanize',
     'django.contrib.admin',
