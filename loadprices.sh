@@ -3,7 +3,7 @@
 
 echo "executing loadprices.sh..."
 # Run this at 4pm PST, this gear is EST
-if [ $(date +%H) == 19 ]; then 
+if [ $(date +%H) == 15 ]; then 
         cd /home/django
         source vpython3/bin/activate
         cd mysite
