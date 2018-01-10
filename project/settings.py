@@ -15,19 +15,10 @@ SECRET_KEY = os.getenv(
     '9e4@&tw46$l31)zrqe3wi+-slqm(ruvz&se0^%9#6(_w3ui!c0'
 )
 
-#setup DEBUG based on the DJANGO_SECRET_KEY in the environment
-
-ON_PAAS = 'DJANGO_SECRET_KEY' in os.environ
-WWWNAME = ['www.stocksonthebeach.com','stocksonthebeach.com', socket.gethostname()]
-
-DEBUG = not ON_PAAS
-DEBUG = DEBUG or 'DEBUG' in os.environ
 DEBUG = False
+DEBUG = DEBUG or 'DEBUG' in os.environ
 
-#if ON_PAAS:
-#    ALLOWED_HOSTS = [os.environ['OPENSHIFT_APP_DNS'], socket.gethostname()] + WWWNAME
-#else:
-ALLOWED_HOSTS = WWWNAME
+ALLOWED_HOSTS = ['www.stocksonthebeach.com','stocksonthebeach.com', socket.gethostname()]
 
 #django-allauth
 AUTHENTICATION_BACKENDS = (
@@ -94,11 +85,32 @@ WSGI_APPLICATION = 'wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-from . import database
 
-DATABASES = {
-    'default': database.config()
-}
+if os.getenv('DATABASE_NAME', None):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv('DATABASE_NAME'),
+            'USER': os.getenv('DATABASE_USER'),
+            'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
+
+# from . import database
+
+# DATABASES = {
+#     'default': database.config()
+# }
 
 
 # Internationalization
