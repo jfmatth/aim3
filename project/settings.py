@@ -86,13 +86,13 @@ WSGI_APPLICATION = 'wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 
-if os.getenv("DATABASE_NAME", None):
+if os.getenv('DATABASE_NAME', None):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.getenv("DATABASE_NAME"),
-            'USER': os.getenv("DATABASE_USER"),
-            'PASSWORD': os.getenv("DATABASE_PASSWORD"),
+            'NAME': os.getenv('DATABASE_NAME'),
+            'USER': os.getenv('DATABASE_USER'),
+            'PASSWORD': os.getenv('DATABASE_PASSWORD'),
             'HOST': '127.0.0.1',
             'PORT': '5432',
         }
