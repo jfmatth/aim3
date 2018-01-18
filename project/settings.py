@@ -18,7 +18,10 @@ SECRET_KEY = os.getenv(
 DEBUG = False
 DEBUG = DEBUG or 'DEBUG' in os.environ
 
-ALLOWED_HOSTS = ['www.stocksonthebeach.com','stocksonthebeach.com', socket.gethostname()]
+if not DEBUG:
+    ALLOWED_HOSTS = ['www.stocksonthebeach.com','stocksonthebeach.com', socket.gethostname()]
+else:
+    ALLOWED_HOSTS = ["*"]
 
 #django-allauth
 AUTHENTICATION_BACKENDS = (
@@ -59,7 +62,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
 )
 
 ROOT_URLCONF = 'project.urls'
@@ -80,7 +83,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'wsgi.application'
+WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -106,13 +109,6 @@ else:
     }
 
 
-# from . import database
-
-# DATABASES = {
-#     'default': database.config()
-# }
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -129,8 +125,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
