@@ -64,4 +64,4 @@ target/
 activate.bat
 .vscode/
 
-nogit/
+environment.cmd

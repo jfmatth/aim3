@@ -19,7 +19,6 @@ from io import BytesIO
 from aim.models import Symbol, Price
 from loader.models import Exchange, ExchangePrice, PriceError
 
-
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -28,8 +27,14 @@ def EODDATA_loader(loaddate, history):
     """
     EODDATA_loader - this function downloads the latest exchange list for each list in Exchange(s), then downloads the prices
     for today into ExchangePrice.
-    
+        
     """
+
+    # Make sure we have our environment variabels.
+    if not settings.FTPLOGIN:
+        logger.info("no FTPLOGIN in settings")
+        return
+
     # Load todays prices from FTP EODDATA.com
 
     logger.info("EODDATA_loader() start")
@@ -246,6 +251,14 @@ def LoadPrices():
     return count
 
 
+def NotifyAdmin(subject, body):
+    if not settings.EMAIL_HOST_USER:
+        logger.info("NotifyAdmin - No EMAILHOST specified in settings")
+        return
+
+    mail_admins(subject, body)
+
+
 def LoadAll(date=None, history=False):
     """
     This runs through the daily routine to download the prices via FTP from EODDATA and then load them into the Symbol and Prices tables.
@@ -264,11 +277,10 @@ def LoadAll(date=None, history=False):
 
         subject = "%s - %s Prices Loaded for %s" % (cs.domain, cs.name, loaddate)
         body = "%s Exchanges loaded, %s prices loaded" % (c1, c2)
-        mail_admins(subject, body)
+        NotifyAdmin(subject, body)
     else:
         logger.info("Skipping weekend %s" % loaddate)
 
-    loaddate
 
     logger.info("LoadAll() complete")
 

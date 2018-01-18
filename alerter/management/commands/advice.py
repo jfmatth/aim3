@@ -32,10 +32,15 @@ def do_alerts():
                     alert_set.append(h)
 
         if alert_set:
-            ctx = {"alert_set" : alert_set }
-            message = render_to_string("alerter/email_report.html",ctx)
-            mfrom = settings.EMAIL_HOST_USER
-            send_mail(subject="Portfolio alerts", message=None, html_message=message, from_email=mfrom, recipient_list=[u.email,])
+            try:
+                ctx = {"alert_set" : alert_set }
+                message = render_to_string("alerter/email_report.html",ctx)
+                mfrom = settings.EMAIL_HOST_USER
+
+                send_mail(subject="Portfolio alerts", message=None, html_message=message, from_email=mfrom, recipient_list=[u.email,])
+            except:
+                logger.debug("error sending email)
+
 
 class Command(BaseCommand):
     args = None
