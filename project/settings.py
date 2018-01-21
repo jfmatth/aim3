@@ -19,6 +19,8 @@ DEBUG = False
 DEBUG = DEBUG or 'DEBUG' in os.environ
 
 ALLOWED_HOSTS = ['www.stocksonthebeach.com','stocksonthebeach.com', socket.gethostname()]
+if DEBUG:
+  ALLOWED_HOSTS = ["*"]
 
 #django-allauth
 AUTHENTICATION_BACKENDS = (
