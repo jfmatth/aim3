@@ -35,3 +35,10 @@ class PriceError(BaseModel):
     
     def __str__(self):
         return self.symbolname
+
+
+class ExchangeSplit(BaseModel):
+   exchange = models.ForeignKey(Exchange)
+   data = models.TextField(blank=True, null=True)
+   date = models.DateField(blank=True, null=True)
+   loaded = models.BooleanField(default=False)

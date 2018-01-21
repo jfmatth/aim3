@@ -1,5 +1,5 @@
 from django.contrib import admin
-from aim.models import Transaction, Holding, Symbol, Price, Portfolio, AimController, HoldingAlert
+from aim.models import Transaction, Holding, Symbol, Price, Portfolio, AimController, HoldingAlert, Split
 
 class TransactionAdmin(admin.ModelAdmin):
     pass
@@ -53,3 +53,9 @@ admin.site.register(AimController, AimAdmin)
 class AlertAdmin(admin.ModelAdmin):
     pass
 admin.site.register(HoldingAlert, AlertAdmin)
+
+class SplitAdmin(admin.ModelAdmin):
+    list_display = ('symbol', 'date', 'ratio',)
+    pass
+admin.site.register(Split, SplitAdmin)
+

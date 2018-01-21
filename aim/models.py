@@ -362,3 +362,14 @@ class Transaction(models.Model):
         
     def get_absolute_url(self):
         return "/aim/holding/%s/" % self.holding.id
+
+
+# Split, the reference when a stock splits.  SImilar to an alert
+class Split(models.Model):
+    symbol  = models.ForeignKey(Symbol)
+    date    = models.DateField(blank=False)
+    ratio   = models.CharField(max_length=10, blank=False)
+    applied = models.BooleanField(default=False, db_index=True)
+
+    def __str_(self):
+        return "%s-%s-%s-%s" % (self.symbol, self.date, self.ratio, self.applied)
