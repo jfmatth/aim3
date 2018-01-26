@@ -45,7 +45,7 @@ def EODDATA_loader(loaddate, history):
 
     ftp = FTP("ftp.eoddata.com")
     try:
-        logger.debug("FTP Login as %s" % settings.FTPLOGIN)
+        logger.info("FTP Login as %s" % settings.FTPLOGIN)
         ftp.login(settings.FTPLOGIN, settings.FTPPASS)
     except:
         logger.debug("Error logging into FTP")
@@ -58,7 +58,7 @@ def EODDATA_loader(loaddate, history):
         try:
             exchangefile = "%s.txt" % e.name
 
-            logger.debug("Retreiving Exchange %s" % exchangefile)
+            logger.info("Retreiving Exchange %s" % exchangefile)
 
             ftp.retrbinary("RETR %s" % exchangefile, mfile.write)
 
@@ -66,7 +66,7 @@ def EODDATA_loader(loaddate, history):
             e.loaded = False
             e.save()
 
-            logger.debug("%s retrieved and saved" % exchangefile)
+            logger.info("%s retrieved and saved" % exchangefile)
 
         except:
             logger.debug("Current datetime = $s, Error retreiving index %s" % (datetime.datetime.today(), e.name))
@@ -74,21 +74,21 @@ def EODDATA_loader(loaddate, history):
         del (mfile)
 
     # Get the splits for each exchange 
-    logger.debug("splits")
+    logger.info("splits")
     ftp.cwd("/Splits")
     for x in Exchange.objects.all():
         mfile = BytesIO()
         # try:
-        pricefile = "%s.txt" % (e.name)
+        pricefile = "%s.txt" % (x.name)
 
-        logger.debug("Retreiving splits %s" % pricefile)
+        logger.info("Retreiving splits %s" % pricefile)
 
         ftp.retrbinary("RETR %s" % pricefile, mfile.write)
 
-        p = ExchangeSplit(exchange=e, data=mfile.getvalue(), loaded=False )
+        p = ExchangeSplit(exchange=x, data=mfile.getvalue(), loaded=False )
         p.save()
 
-        logger.debug("%s Splits Saved" % pricefile)
+        logger.info("%s Splits Saved" % pricefile)
         # except:
         #     logger.exception("error in splits")
 
@@ -220,7 +220,6 @@ def ProcessPrices(f, headers=False):
         #   use the symbollist to verify each CSV line w/o a lookup
         if csvline[0] in symbollist:
             # if we already have it here, then skip.
-            logger.debug("skipping %s due to duplicate" % csvline[0])
             pass
         else:
 
@@ -328,10 +327,12 @@ def LoadSplits():
 
         count += n
 
+    # # Since there is such overlap on splits, remove the ones that have been processed
+    # ExchangeSplit.objects.filter(loaded=True).delete()
+
     logger.info("LoadPrices() complete")
 
     return count
-
 
 
 def NotifyAdmin(subject, body):
@@ -340,6 +341,76 @@ def NotifyAdmin(subject, body):
         return
 
     mail_admins(subject, body)
+
+@transaction.atomic
+def AdjustForSplits():
+    # go through all the aim.models.split records and adjust the price table and holdings for splits
+
+    today = datetime.date.today()
+
+    for s in Split.objects.filter(applied=False).filter(date__lte=today):
+
+        logger.info("Working on prices for  %s" % s.symbol)
+
+        # ratios are in the format s1-s2 (for ex. 1-4 is one share for 4), so multiply
+        # older prices by 4 to adjust to the new prices.
+        s1 = int(s.ratio.split("-")[0])
+        s2 = int(s.ratio.split("-")[1])
+
+        price_multiplier =  Decimal( s2 / s1 )
+
+        # First - Adjust the prices table
+        # find all prices for this splits symbol and load them into a queryset
+        # find the prices that less than the split date, and adust them
+        for x in Price.objects.filter(symbol=s.symbol).filter(date__lt=s.date):
+            x.high = x.high * price_multiplier
+            x.low  = x.low * price_multiplier
+            x.close = x.close * price_multiplier
+            x.save()
+
+        # adjust holdings prices if necessary
+        if settings.SPLITS:
+
+            transaction_multiplyer = Decimal( s1 / s2 )  # opposite of price_multiplier
+
+            # Second - Find all holdings with this symbol that occured before the split and
+            #          adjust how many shares they have
+            for h in Holding.objects.filter(symbol=s.symbol):
+                # if someone owns this holding, find all transactions that occured before the date
+                # of the split
+
+                logger.info("Working on Holding  %s" % h)
+
+                for sh in h.transaction_set.filter(date__lt = s.date):
+                    # so we have a transaciton that occured before the split, make sure we 
+                    # add or subtract shares via a transaction into their account based on the 
+                    # multiplier value
+                    if transaction_multiplyer > 1:
+                        # we will buy some
+                        t = Transaction()
+                        t.holding = h 
+                        t.date = s.date
+                        t.shares =  (sh.shares * transaction_multiplyer) - sh.shares
+                        t.price = 0                 # we are getting these for free
+                        t.type = "Buy"
+                        t.save()
+
+                    elif transaction_multiplyer < 1:
+                        # we will sell some
+                        t = Transaction()
+                        t.holding = h 
+                        t.date = s.date
+                        t.shares =  sh.shares - (sh.shares * transaction_multiplyer)
+                        t.price = 0                 # we are selling these
+                        t.type = "Sell"
+                        t.save()
+                        
+                    else:
+                        logger.debug("opps, no case for this?")
+
+
+        s.applied = True
+        s.save()
 
 def LoadAll(date=None, history=False):
     """
@@ -365,70 +436,6 @@ def LoadAll(date=None, history=False):
         logger.info("Skipping weekend %s" % loaddate)
 
     logger.info("LoadAll() complete")
-
-@transaction.atomic
-def AdjustForSplits():
-    # go through all the aim.models.split records and adjust the price table and holdings for splits
-
-    today = datetime.date.today()
-
-    for s in Split.objects.filter(applied=False).filter(date__lte=today):
-
-        # ratios are in the format s1-s2 (for ex. 1-4 is one share for 4), so multiply
-        # older prices by 4 to adjust to the new prices.
-        s1 = int(s.ratio.split("-")[0])
-        s2 = int(s.ratio.split("-")[1])
-
-        price_multiplier =  Decimal( s2 / s1 )
-
-        # First - Adjust the prices table
-        # find all prices for this splits symbol and load them into a queryset
-        # find the prices that less than the split date, and adust them
-        for x in Price.objects.filter(symbol=s.symbol).filter(date__lt=s.date):
-            x.high = x.high * price_multiplier
-            x.low  = x.low * price_multiplier
-            x.close = x.close * price_multiplier
-            x.save()
-
-        transaction_multiplyer = Decimal( s1 / s2 )  # opposite of price_multiplier
-
-        # Second - Find all holdings with this symbol that occured before the split and
-        #          adjust how many shares they have
-        for h in Holding.objects.filter(symbol=s.symbol):
-            # if someone owns this holding, find all transactions that occured before the date
-            # of the split
-            
-            for sh in h.transaction_set.filter(date__lt = s.date):
-                # so we have a transaciton that occured before the split, make sure we 
-                # add or subtract shares via a transaction into their account based on the 
-                # multiplier value
-                if transaction_multiplyer > 1:
-                    # we will buy some
-                    t = Transaction()
-                    t.holding = h 
-                    t.date = s.date
-                    t.shares =  (sh.shares * transaction_multiplyer) - sh.shares
-                    t.price = 0                 # we are getting these for free
-                    t.type = "Buy"
-                    t.save()
-
-                elif transaction_multiplyer < 1:
-                    # we will sell some
-                    t = Transaction()
-                    t.holding = h 
-                    t.date = s.date
-                    t.shares =  sh.shares - (sh.shares * transaction_multiplyer)
-                    t.price = 0                 # we are selling these
-                    t.type = "Sell"
-                    t.save()
-                    
-                else:
-                    logger.debug("opps, no case for this?")
-
-
-        s.applied = True
-        s.save()
-         
 
 
 

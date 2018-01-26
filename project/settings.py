@@ -159,7 +159,10 @@ LOGGING = {
     'loggers': {
         'loader': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
         },
     },
 }
+
+
+SPLITS = os.environ.get("SPLITS", True)
