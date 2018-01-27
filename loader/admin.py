@@ -9,7 +9,7 @@ admin.site.register(Exchange, ExchangeAdmin)
 
 class ExchangePriceAdmin(admin.ModelAdmin):
     # list_filter = ["loaded",]
-    # list_display = ["cdate","exchange", "loaded" ]
+    list_display = ("exchange", "cdate","loaded")
     pass
 admin.site.register(ExchangePrice, ExchangePriceAdmin)
 
