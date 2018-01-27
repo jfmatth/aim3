@@ -55,7 +55,7 @@ class AlertAdmin(admin.ModelAdmin):
 admin.site.register(HoldingAlert, AlertAdmin)
 
 class SplitAdmin(admin.ModelAdmin):
-    list_display = ('symbol', 'date', 'ratio',)
+    list_display = ('symbol', 'date', 'ratio','applied',)
     pass
 admin.site.register(Split, SplitAdmin)
 

@@ -346,11 +346,12 @@ def NotifyAdmin(subject, body):
 def AdjustForSplits():
     # go through all the aim.models.split records and adjust the price table and holdings for splits
 
+    count = 0
     today = datetime.date.today()
 
     for s in Split.objects.filter(applied=False).filter(date__lte=today):
 
-        logger.info("Working on prices for  %s" % s.symbol)
+        logger.info("Split adjusting prices for  %s" % s.symbol)
 
         # ratios are in the format s1-s2 (for ex. 1-4 is one share for 4), so multiply
         # older prices by 4 to adjust to the new prices.
@@ -385,6 +386,9 @@ def AdjustForSplits():
                     # so we have a transaciton that occured before the split, make sure we 
                     # add or subtract shares via a transaction into their account based on the 
                     # multiplier value
+
+                    count += 1
+
                     if transaction_multiplyer > 1:
                         # we will buy some
                         t = Transaction()
@@ -401,16 +405,19 @@ def AdjustForSplits():
                         t.holding = h 
                         t.date = s.date
                         t.shares =  sh.shares - (sh.shares * transaction_multiplyer)
-                        t.price = 0                 # we are selling these
+                        t.price = 0                 # we are selling these for nothing
                         t.type = "Sell"
                         t.save()
                         
                     else:
                         logger.debug("opps, no case for this?")
 
-
+        
         s.applied = True
         s.save()
+
+    return count
+
 
 def LoadAll(date=None, history=False):
     """
@@ -426,10 +433,11 @@ def LoadAll(date=None, history=False):
         c1 = LoadExchange()
         c2 = LoadPrices()
         c3 = LoadSplits()
+        c4 = AdjustForSplits()
         cs = Site.objects.get_current()
 
         subject = "%s - %s Prices Loaded for %s" % (cs.domain, cs.name, loaddate)
-        body = "%s / %s Exchanges/Splits loaded, %s prices loaded" % (c1, c3, c2)
+        body = "%s Exchanges, %s Prices loaded, %s Splits, %s Holdings adjusted" % (c1, c2, c3, c4)
 
         NotifyAdmin(subject, body)
     else:

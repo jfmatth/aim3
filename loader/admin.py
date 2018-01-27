@@ -19,7 +19,7 @@ admin.site.register(PriceError, PriceErrorAdmin)
 
 class ExchangeSplitAdmin(admin.ModelAdmin):
     # list_filter = ["loaded",]
-    # list_display = ["symbol", "date", "ratio", "applied"]
+    list_display = ("exchange", "cdate","loaded")
     pass
 
 admin.site.register(ExchangeSplit, ExchangeSplitAdmin)
