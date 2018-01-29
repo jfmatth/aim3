@@ -91,8 +91,8 @@ class TransactionForm(forms.ModelForm):
 #         self.fields['holding'].widget.attrs['disabled'] = True
       
         # Same thing with the type of transaction we are doing.
-        self.fields['type'].required = False
-        self.fields['type'].widget.attrs['disabled'] = True
+        self.fields['type'].required = True
+        self.fields['type'].widget.attrs['disabled'] = False
       
         
 #     def clean_holding(self):
